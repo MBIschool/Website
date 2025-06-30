@@ -1,0 +1,262 @@
+<!-- APPLICATION.HTML -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apply Now | Madrasat-ul-Bayt Institute</title>
+  <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <!-- Primary Meta Tags -->
+<meta name="title" content="MadrasatulBayt Institute | Quality Islamic & Vocational Education in Jamaica" />
+<meta name="description" content="MadrasatulBayt Institute offers quality Islamic and vocational education programs in Spanish Town, Jamaica. Enroll in primary, secondary, and college-level courses that foster beneficial knowledge and strong community values." />
+<meta name="keywords" content="MadrasatulBayt, Islamic Education Jamaica, Vocational Training Jamaica, Spanish Town School, Primary School Jamaica, Secondary School Jamaica, College of Islamic Studies, Student Application Jamaica" />
+<meta name="author" content="MadrasatulBayt Institute" />
+<meta name="robots" content="index, follow" />
+
+<!-- Facebook Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://madrasatulbayt.org/" />
+<meta property="og:title" content="MadrasatulBayt Institute | Quality Islamic & Vocational Education in Jamaica" />
+<meta property="og:description" content="Enroll today in MadrasatulBayt Institute to pursue quality Islamic and vocational education in Spanish Town, Jamaica. Building future leaders with beneficial knowledge." />
+<meta property="og:image" content="https://madrasatulbayt.org/images/og-image.jpg" />
+
+  <style>
+    .application-form {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .application-form fieldset {
+      border: none;
+      margin-bottom: 2rem;
+      padding: 0;
+    }
+
+    .application-form legend {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #0a3c6d;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #0a3c6d;
+      padding-bottom: 0.3rem;
+    }
+
+    .application-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .application-form input,
+    .application-form select,
+    .application-form textarea {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .application-form button.btn-apply {
+      background-color: #0a3c6d;
+      color: #fff;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .application-form button.btn-apply:hover {
+      background-color: #145ca3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <nav>
+    <div class="logo">
+      <img src="images/logo.png" alt="MBI Logo" class="logo-img">
+      <span class="logo-text">Madrasat-ul-Bayt Institute</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="academics.html">Academics</a></li>
+      <li><a href="application.html">Apply Now</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="donate.html">Donate</a></li>
+    </ul>
+  </nav>
+</header>
+
+  <main>
+    <section class="application">
+      <h2 class="section-title">Student Application Form</h2>
+      <!-- <form action="#" method="post" enctype="multipart/form-data" class="application-form"> -->
+
+      <!-- <form action="https://formspree.io/f/manjlapo" method="POST" enctype="multipart/form-data" class="application-form"> -->
+
+        <form action="/submit-application" method="POST" enctype="multipart/form-data" class="application-form"> 
+        <!-- To send a copy to a second email -->
+
+
+        <fieldset>
+          <legend>Personal Information</legend>
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" name="firstName" required minlength="2" maxlength="50" pattern="[A-Za-z\s]+" placeholder="John">
+
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" name="lastName" required minlength="2" maxlength="50" pattern="[A-Za-z\s]+" placeholder="Doe">
+
+
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required max="2020-12-31" placeholder="YYYY-MM-DD">
+
+
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender" required>
+            <option value="">--Select--</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+
+          <label for="address">Home Address:</label>
+          <textarea id="address" name="address" rows="3" required></textarea>
+
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" required pattern="[0-9]{10,15}" placeholder="8765551234">
+
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" required placeholder="example@email.com">
+        </fieldset>
+
+        <fieldset>
+          <legend>Parent/Guardian Details</legend>
+          <label for="guardianName">Full Name:</label>
+          <input type="text" id="guardianName" name="guardianName" required minlength="3" maxlength="100" pattern="[A-Za-z\s]+" placeholder="Jane Smith">
+
+
+          <label for="guardianRelation">Relationship:</label>
+          <input type="text" id="guardianRelation" name="guardianRelation" required>
+
+          <label for="guardianPhone">Phone Number:</label>
+          <input type="tel" id="guardianPhone" name="guardianPhone" required pattern="[0-9]{10,15}" placeholder="8765551234">
+
+
+          <label for="guardianEmail">Email Address:</label>
+          <input type="email" id="guardianEmail" name="guardianEmail" required placeholder="guardian@example.com">
+
+        </fieldset>
+
+        <fieldset>
+          <legend>Academic History</legend>
+          <label for="prevSchool">Previous School Attended:</label>
+          <input type="text" id="prevSchool" name="prevSchool">
+
+          <label for="gradeCompleted">Last Grade Completed:</label>
+          <input type="text" id="gradeCompleted" name="gradeCompleted">
+        </fieldset>
+
+        <fieldset>
+          <legend>Program Selection</legend>
+          <label for="program">Select Program:</label>
+          <select id="program" name="program" required>
+            <option value="">--Select--</option>
+            <option value="Primary">Primary/Preparatory</option>
+            <option value="Secondary">Secondary/High School</option>
+            <option value="College">College of Islamic & Vocational Studies</option>
+          </select>
+        </fieldset>
+
+        <fieldset>
+
+        <legend>Upload Documents</legend>
+
+        <label for="birthCert">Birth Certificate (PDF or Image):</label>
+        <input type="file" id="birthCert" name="birthCert" accept=".pdf,image/*" required>
+
+        <label for="schoolReport">Previous School Report (if available):</label>
+        <input type="file" id="schoolReport" name="schoolReport" accept=".pdf,image/*">
+
+        <label for="passportPhoto">Passport-Sized Photo:</label>
+        <input type="file" id="passportPhoto" name="passportPhoto" accept="image/*" required>
+
+        <label for="academicCertificates">Academic Certificates (Upload multiple):</label>
+        <input type="file" id="academicCertificates" name="academicCertificates[]" accept=".pdf,.jpg,.jpeg,.png" multiple required>
+      </fieldset>
+
+        <a href="/download-blank-form" type="button" class="btn-apply" download><i class="fas fa-download"></i> Download Form as PDF</a>
+        <!-- <a href="/download-blank-form" class="btn-apply" download>
+  <i class="fas fa-download"></i> Download Blank Application Form (PDF)
+</a> -->
+
+        <button type="submit" class="btn-apply">Submit Application</button>
+      </form>
+    </section>
+  </main>
+    <footer>
+    <div class="footer-content">
+        <div class="footer-section motto">
+            <p>"Towards beneficial knowledge "</p>
+        </div>
+
+        <div class="footer-section contact-info-footer">
+            <h3>Contact Us</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Madrasat-ul-Bayt, 8 Windsor Road , Spanish Town</p>
+            <p><i class="fas fa-phone"></i> Landline: +1 (876) 218-8769</p>
+            <p><i class="fas fa-mobile-alt"></i> Cellphone: +1 (876) 428-6872</p>
+            <p><i class="fas fa-envelope"></i> <a href="contact.html">madrasatulbayt2013@outlook.com</a></p>
+        </div>
+
+        <div class="footer-section social-links-footer">
+            <h3>Connect With Us</h3>
+            <div class="social-icons">
+                <a href="contact.html" target="_blank" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                <a href="https://www.facebook.com/share/1AxHmYJnia/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.twitter.com/madrasatulbayt" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer-bottom">
+        <p>&copy; 2025 Madrasat-ul-Bayt Institute | All rights reserved.</p>
+    </div>
+
+</footer>
+<!-- html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- jsPDF Classic Build -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.legacy.min.js"></script>
+
+<script>
+  document.getElementById('download-pdf').addEventListener('click', () => {
+    // Classic build: jsPDF is directly available globally
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const form = document.querySelector('.application-form');
+
+    html2canvas(form).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pdfHeight);
+      pdf.save('Application_Form.pdf');
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log in - Tertiary Assistance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&amp;family=Roboto+Mono&amp;display=swap" rel="stylesheet">
+    <link href="/themes/panely/assets/build/styles/ltr-core.css" rel="stylesheet">
+    <link href="/themes/panely/assets/build/styles/ltr-vendor.css" rel="stylesheet">
+    <link href="/themes/panely/assets/build/styles/ltr-dashboard1.css" rel="stylesheet">
+    
+</head>
+<body class="theme-light preload-active" id="fullscreen">
+    <div class="preload">
+        <div class="preload-dialog">
+            <!-- BEGIN Spinner -->
+            <div class="spinner-border text-primary preload-spinner"></div>
+            <!-- END Spinner -->
+        </div>
+    </div>
+    <div class="holder">
+        <!-- BEGIN Page Wrapper -->
+        <div class="wrapper">
+            <!-- BEGIN Page Content -->
+            <div class="content ">
+                <div class="container-fluid">
+                    
+
+
+
+<div class="row no-gutters align-items-center justify-content-center h-100">
+    <div class="col-lg-8 col-xl-6">
+        <!-- BEGIN Portlet -->
+        <div class="portlet overflow-hidden">
+            <div class="row no-gutters">
+                <div class="col-md-6">
+                    <div class="portlet-body d-flex flex-column justify-content-center align-items-start h-100 bg-primary text-white">
+                        <div class="text-center"><a class="navbar-brand" href="/"><img src="/images/moe-logo-small.png" class="logo" /></a></div>
+                        <h2>Ministry of Education Tertiary Assistance</h2>
+                        <p>
+                            The Ministry of Education and Youth (MoEY) provides funding support to tertiary students.
+                            All programmes are administered under the Tertiary Students Assistance Programme.
+                        </p>
+                        <a class="btn btn-outline-light btn-lg btn-widest btn-pill" href="/Identity/Account/Register?returnUrl=%2FScholarshipApplications%2FRetrieveUploadedFiles%3Ffile%3DScreenshot%25202025-06-26%2520095553_20250626113341398.png">Register</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="portlet-body h-100">
+                        <!-- BEGIN Form -->
+                        <form id="account" method="post">
+                            <!-- BEGIN Form Group -->
+                            <div class="text-danger validation-summary-valid" data-valmsg-summary="true"><ul><li style="display:none"></li>
+</ul></div>
+                            <div class="form-group">
+                                <div class="float-label float-label-lg">
+                                    <input class="form-control form-control-lg" type="email" placeholder="Please insert your email" data-val="true" data-val-email="The Email field is not a valid e-mail address." data-val-required="The Email field is required." id="Input_Email" name="Input.Email" value="">
+                                    <label for="Input_Email">Email</label>
+                                </div>
+                            </div>
+                            <!-- END Form Group -->
+                            <!-- BEGIN Form Group -->
+                            <div class="form-group">
+                                <div class="float-label float-label-lg">
+                                    <input class="form-control form-control-lg" type="password" placeholder="Please provide your password" data-val="true" data-val-required="The Password field is required." id="Input_Password" name="Input.Password">
+                                    <label for="Input_Password">Password</label>
+                                </div>
+                            </div>
+                            <!-- END Form Group -->
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <!-- BEGIN Form Group -->
+                                <div class="form-group mb-0">
+                                    <div class="custom-control custom-control-lg custom-switch">
+                                        <input type="checkbox" class="custom-control-input" data-val="true" data-val-required="The Remember me? field is required." id="Input_RememberMe" name="Input.RememberMe" value="true">
+                                        <label class="custom-control-label" for="Input_RememberMe">Remember me</label>
+                                    </div>
+                                </div>
+                                <!-- END Form Group -->
+                                <a id="forgot-password" href="/Identity/Account/ForgotPassword">Forgot password?</a><br />
+                                <a id="resend-confirmation" href="/Identity/Account/ResendEmailConfirmation">Resend email confirmation</a>
+                            </div>
+                            <button type="submit" class="btn btn-label-primary btn-lg btn-block btn-pill">Login</button>
+                        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8P4J3IM52G5MkRmXyuooqY47ZD7BUEnTAKJNimOphAwIaJReI4ZUT8FkDmXSr5aQ4FOeeT6q7vpveY5He1kZdraUr6Wzz9li5GGFCS3FCNoI1qHnoShVdTwBAC5Hd97NqehW-AeQQdVtNGhM0Nnvu4Y" /><input name="Input.RememberMe" type="hidden" value="false"></form>
+                        <!-- END Form -->
+                    </div>
+                    <p>If you have not received a confirmation email, please click the Re-send Confirmation Emai link above and then, when prompted, enter the email address you used to register.</p>
+                </div>
+            </div>
+        </div>
+        <!-- END Portlet -->
+    </div>
+</div>
+
+
+                </div>
+            </div>
+            <!-- END Page Content -->
+        </div>
+        <!-- END Page Wrapper -->
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Tertiary Assistance
+        </div>
+    </footer>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/jqueryui/jquery-ui.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/site.js?v=4q1jwFhaPaZgr8WAUSrux6hAuh0XDg9kPS3xIVq36I0"></script>
+    <script type="text/javascript" src="/themes/panely/assets/build/scripts/mandatory.js"></script>
+    <script type="text/javascript" src="/themes/panely/assets/build/scripts/core.js"></script>
+    <script type="text/javascript" src="/themes/panely/assets/build/scripts/vendor.js"></script>
+    <script type="text/javascript" src="/themes/panely/assets/build/scripts/dashboard1.js"></script>
+    
+    
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js" crossorigin="anonymous" integrity="sha384-rZfj/ogBloos6wzLGpPkkOr/gpkBNLZ6b6yLy4o+ok+t/SAKlL5mvXLr0OXNi1Hp">
+    </script>
+<script>(window.jQuery && window.jQuery.validator||document.write("\u003Cscript src=\u0022/Identity/lib/jquery-validation/dist/jquery.validate.min.js\u0022 crossorigin=\u0022anonymous\u0022 integrity=\u0022sha384-rZfj/ogBloos6wzLGpPkkOr/gpkBNLZ6b6yLy4o\u002Bok\u002Bt/SAKlL5mvXLr0OXNi1Hp\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.9/jquery.validate.unobtrusive.min.js" crossorigin="anonymous" integrity="sha384-ifv0TYDWxBHzvAk2Z0n8R434FL1Rlv/Av18DXE43N/1rvHyOG4izKst0f2iSLdds">
+    </script>
+<script>(window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive||document.write("\u003Cscript src=\u0022/Identity/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js\u0022 crossorigin=\u0022anonymous\u0022 integrity=\u0022sha384-ifv0TYDWxBHzvAk2Z0n8R434FL1Rlv/Av18DXE43N/1rvHyOG4izKst0f2iSLdds\u0022\u003E\u003C/script\u003E"));</script>
+
+
+
+</body>
+</html>
