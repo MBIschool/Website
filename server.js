@@ -188,7 +188,12 @@ app.post('/submit-application', applicationUpload, async (req, res) => { // Use 
 
         // 2. Generate PDF from HTML using Puppeteer
         const htmlContent = generateApplicationPdfHtml(formData, fileNamesForPdf);
-        const browser = await puppeteer.launch({ headless: true }); // headless: 'new' for newer Puppeteer versions
+        //const browser = await puppeteer.launch({ headless: true }); // headless: 'new' for newer Puppeteer versions
+        const browser = await puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
+
         const page = await browser.newPage();
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
         const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
@@ -311,7 +316,12 @@ if (formData.email) {
 // Routing for downloading a blank form
 app.get('/download-blank-form', async (req, res) => {
   try {
-    const browser = await puppeteer.launch();
+    // const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
+
     const page = await browser.newPage();
 
     // Path to your blank HTML form file (make sure you have this file in your project)
