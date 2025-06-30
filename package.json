@@ -1,4 +1,11 @@
 {
+  "name": "madrasatulnayt-website",
+  "version": "1.0.0",
+  "description": "Node.js backend for Madrasatul Nayt website",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
