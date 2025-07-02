@@ -44,7 +44,7 @@ COPY package*.json ./
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # Install dependencies
-RUN npm ci --omit=dev
+RUN npm ci 
 
 # Copy app source
 COPY . .
