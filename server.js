@@ -745,4 +745,6 @@ app.listen(port, () => {
     console.log(`Application form endpoint: http://localhost:${port}/submit-application`);
     console.log(`Contact form endpoint: http://localhost:${port}/submit-contact`);
     console.log(`Make sure your HTML forms' 'action' attributes point to these URLs.`);
+    console.log('Using Chromium at:', puppeteer.executablePath());
+
 });
