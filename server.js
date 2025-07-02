@@ -571,7 +571,8 @@ app.post('/submit-application', applicationUpload, async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+           ignoreDefaultArgs: ['--disable-extensions']
             });
 
         const page = await browser.newPage();
@@ -697,6 +698,7 @@ app.get('/download-blank-form', async (req, res) => {
     const browser = await puppeteer.launch({
   headless: true,
   args: ['--no-sandbox', '--disable-setuid-sandbox'],
+ignoreDefaultArgs: ['--disable-extensions']
 });
 
     const page = await browser.newPage();
