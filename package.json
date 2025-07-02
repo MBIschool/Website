@@ -9,8 +9,9 @@
   "dependencies": {
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
+    "html-pdf": "^3.0.1",
     "multer": "^2.0.1",
     "nodemailer": "^7.0.3",
-    "puppeteer": "^24.11.2"
+    "puppeteer": "^22.15.0"
   }
 }
