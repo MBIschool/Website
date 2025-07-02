@@ -4,31 +4,52 @@ FROM node:20-slim
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Install Google Chrome Stable and other dependencies required by Puppeteer
-# Note: This is a more robust way to ensure a compatible Chromium version.
-RUN apt-get update && apt-get install -y gnupg wget \
-    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg \
-    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-    && apt-get update && apt-get install -y \
-        google-chrome-stable \
-        fontconfig \
-        fonts-ipafont-gothic \
-        fonts-wqy-zenhei \
-        fonts-thai-tlwg \
-        fonts-kacst \
-        --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* \
-        && rm -rf /etc/apt/keyrings/google-chrome.gpg # Clean up the key after use
+# Install system dependencies required by Puppeteer's downloaded Chromium.
+# This ensures that Puppeteer's own browser can run correctly in a minimal environment.
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    fonts-liberation \
+    libappindicator3-1 \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcairo2 \
+    libcups2 \
+    libdbus-1-3 \
+    libexpat1 \
+    libfontconfig1 \
+    libgbm1 \
+    libgdk-pixbuf2.0-0 \
+    libglib2.0-0 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libu2f-udev \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxi6 \
+    libxrandr2 \
+    libxrender1 \
+    libxshmfence6 \
+    libxkbcommon0 \
+    xdg-utils \
+    # Basic fonts often needed for rendering
+    fontconfig \
+    fonts-ipafont-gothic \
+    fonts-wqy-zenhei \
+    fonts-thai-tlwg \
+    fonts-kacst \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
-# Skip Puppeteer's automatic Chromium download
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-# Point Puppeteer to the Google Chrome executable
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+# NO PUPPETEER_SKIP_CHROMIUM_DOWNLOAD ENV VAR HERE
+# NO PUPPETEER_EXECUTABLE_PATH ENV VAR HERE
 
 # Copy package.json and package-lock.json (or yarn.lock) to the working directory
 COPY package*.json ./
 
-# Install Node.js dependencies
+# Install Node.js dependencies. Puppeteer will download Chromium during this step.
 RUN npm ci
 
 # Copy the rest of your application code

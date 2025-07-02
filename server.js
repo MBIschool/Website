@@ -200,7 +200,7 @@ app.post('/submit-application', applicationUpload, async (req, res) => {
             ],
             // You can explicitly set executablePath if needed, but '/usr/bin/chromium' is usually found by default
             // executablePath: '/usr/bin/chromium'
-            executablePath: '/usr/bin/google-chrome-stable'
+            //executablePath: '/usr/bin/google-chrome-stable'
         });
         // --- CHANGE END ---
 
@@ -329,7 +329,7 @@ app.get('/download-blank-form', async (req, res) => {
                 '--single-process'
             ],
             // executablePath: '/usr/bin/chromium' // Optional
-            executablePath: '/usr/bin/google-chrome-stable'
+           
         });
         // --- CHANGE END ---
 
