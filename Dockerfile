@@ -31,7 +31,6 @@ RUN apt-get update && apt-get install -y \
     libxi6 \
     libxrandr2 \
     libxrender1 \
-    libxshmfence6 \
     libxkbcommon0 \
     xdg-utils \
     # Basic fonts often needed for rendering
