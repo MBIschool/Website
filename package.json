@@ -1,5 +1,5 @@
 {
-  "name": "madrasatulbayt-website",
+  "name": "madrasatulnayt-website",
   "version": "1.0.0",
   "description": "Node.js backend for Madrasatul Nayt website",
   "main": "index.js",
@@ -11,7 +11,8 @@
     "express": "^5.1.0",
     "multer": "^2.0.1",
     "nodemailer": "^7.0.3",
-    "puppeteer-core": "^22.0.0", 
-    "chrome-aws-lambda": "^10.0.0" 
+    
+    "puppeteer-core": "^22.0.0" 
+   
   }
 }

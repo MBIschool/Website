@@ -362,17 +362,20 @@
 // });
 
 
+// server.js
+
 require('dotenv').config();
 
 const express = require('express');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 
-// --- CHANGE START ---
+// --- CHANGE START (Import Puppeteer) ---
 // Original: const puppeteer = require('puppeteer');
-// Import puppeteer-core and chrome-aws-lambda for Cloud Run compatibility
-const puppeteer = require('puppeteer-core'); //
-const chromium = require('chrome-aws-lambda'); //
+// Original (after previous change): const puppeteer = require('puppeteer-core');
+// Original (after previous change): const chromium = require('chrome-aws-lambda');
+// Now, only puppeteer-core is needed, as Chromium is installed at the OS level by Dockerfile.
+const puppeteer = require('puppeteer-core');
 // --- CHANGE END ---
 
 const fs = require('fs');
@@ -384,11 +387,10 @@ const port = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
+// --- Directory Setup (No change needed here, but remember these are ephemeral on Cloud Run) ---
 const PDF_OUTPUT_DIR = path.join(__dirname, 'applications_pdfs');
-const UPLOADED_DOCS_DIR = path.join(__dirname, 'uploaded_documents'); // For storing original uploaded files
+const UPLOADED_DOCS_DIR = path.join(__dirname, 'uploaded_documents');
 
-// Ensure directories exist
 if (!fs.existsSync(PDF_OUTPUT_DIR)) {
     fs.mkdirSync(PDF_OUTPUT_DIR);
 }
@@ -396,10 +398,8 @@ if (!fs.existsSync(UPLOADED_DOCS_DIR)) {
     fs.mkdirSync(UPLOADED_DOCS_DIR);
 }
 
-// --- Multer Configuration ---
-// For application form (handles multiple file fields)
-
-    const applicationUpload = multer({
+// --- Multer Configuration (No change) ---
+const applicationUpload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 }
 }).fields([
@@ -410,30 +410,28 @@ if (!fs.existsSync(UPLOADED_DOCS_DIR)) {
 ]);
 
 const contactUpload = multer();
-// --- Nodemailer Transporter Setup ---
+
+// --- Nodemailer Transporter Setup (No change) ---
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT),
-    secure: parseInt(process.env.SMTP_PORT) === 465, // true for 465 (SSL), false for other ports (TLS)
+    secure: parseInt(process.env.SMTP_PORT) === 465,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
 });
 
-// --- Helper Function to Generate PDF HTML ---
+// --- Helper Function to Generate PDF HTML (No change) ---
 function generateApplicationPdfHtml(formData, fileNames) {
-    // Helper to safely get value, defaulting to 'N/A' if undefined or empty
     const getValue = (key) => {
         const value = formData[key];
         return (value === undefined || value === null || (typeof value === 'string' && value.trim() === ''))? 'N/A' : value;
     };
 
-    // Format date of birth if available
     const dob = getValue('dob');
     const formattedDob = dob !== 'N/A' ? new Date(dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
 
-    // List uploaded files for the PDF
     const uploadedFilesHtml = fileNames.length > 0
         ? `<ul>${fileNames.map(name => `<li>${name}</li>`).join('')}</ul>`
         : 'No documents uploaded.';
@@ -513,61 +511,61 @@ function generateApplicationPdfHtml(formData, fileNames) {
 }
 
 // --- Route for Application Form Submission ---
-app.post('/submit-application', applicationUpload, async (req, res) => { // Use applicationUpload directly
+app.post('/submit-application', applicationUpload, async (req, res) => {
     try {
         const formData = req.body;
-        const uploadedFiles = req.files; // Contains files organized by field name
+        const uploadedFiles = req.files;
 
         console.log('Received Application Form Data:', formData);
         console.log('Received Application Uploaded Files:', uploadedFiles);
 
-        const attachmentsForEmail = []; // Initialize as an empty array
-        const fileNamesForPdf =[]; // Initialize as an empty array
+        const attachmentsForEmail = [];
+        const fileNamesForPdf =[];
 
         const processFileField = (field, isMultiple = false) => {
-    const fieldFiles = uploadedFiles && uploadedFiles[field];
-    const files = isMultiple
-        ? fieldFiles || []
-        : fieldFiles
-            ? [fieldFiles[0]]
-            : [];
+            const fieldFiles = uploadedFiles && uploadedFiles[field];
+            const files = isMultiple
+                ? fieldFiles || []
+                : fieldFiles
+                    ? [fieldFiles[0]]
+                    : [];
 
-    if (files.length > 0) {
-        files.forEach(file => {
-            const uniqueFileName = `${Date.now()}_${file.originalname}`;
-            // const filePath = path.join(UPLOADED_DOCS_DIR, uniqueFileName);
-            // fs.writeFileSync(filePath, file.buffer);
-            // console.log(`Saved uploaded file: ${filePath}`);
+            if (files.length > 0) {
+                files.forEach(file => {
+                    const uniqueFileName = `${Date.now()}_${file.originalname}`;
+                    attachmentsForEmail.push({
+                        filename: file.originalname,
+                        content: file.buffer,
+                        contentType: file.mimetype
+                    });
+                    fileNamesForPdf.push(file.originalname);
+                });
+            }
+        };
 
-            attachmentsForEmail.push({
-                filename: file.originalname,
-                content: file.buffer,
-                contentType: file.mimetype
-            });
-            fileNamesForPdf.push(file.originalname);
-        });
-    }
-};
-
-
-        // Call processFileField for each expected file input
         processFileField('birthCert');
         processFileField('schoolReport');
         processFileField('passportPhoto');
-        processFileField('academicCertificates', true); // true for multiple files
+        processFileField('academicCertificates', true);
 
         // 2. Generate PDF from HTML using Puppeteer
         const htmlContent = generateApplicationPdfHtml(formData, fileNamesForPdf);
 
-        // --- CHANGE START ---
+        // --- CHANGE START (Puppeteer Launch Options) ---
         // Original: const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-        // Use chrome-aws-lambda for executable path and arguments
+        // Original (after chrome-aws-lambda): const browser = await puppeteer.launch({ args: chromium.args, ... });
+        // Use simpler args because Chromium is installed globally by Dockerfile's apt-get.
         const browser = await puppeteer.launch({
-            args: chromium.args, //
-            defaultViewport: chromium.defaultViewport, //
-            executablePath: await chromium.executablePath, //
-            headless: chromium.headless, //
-            ignoreHTTPSErrors: true, //
+            headless: true, // Set to true for server environments
+            args: [
+                '--no-sandbox', // Essential for running as root (or in a containerized env)
+                '--disable-setuid-sandbox', // Also good practice
+                '--disable-dev-shm-usage', // Helps with /dev/shm limitations in some Docker setups
+                '--disable-gpu', // Cloud Run services don't have GPUs by default
+                '--single-process' // Often helps with memory and simplifies the process model
+            ],
+            // You can explicitly set executablePath if needed, but '/usr/bin/chromium' is usually found by default
+            // executablePath: '/usr/bin/chromium'
         });
         // --- CHANGE END ---
 
@@ -576,25 +574,19 @@ app.post('/submit-application', applicationUpload, async (req, res) => { // Use 
         const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
         await browser.close();
 
-        // Define PDF file name and path
         const pdfFileName = `Application_${formData.firstName || 'Unknown'}_${formData.lastName || 'Applicant'}_${Date.now()}.pdf`;
         const pdfFilePath = path.join(PDF_OUTPUT_DIR, pdfFileName);
 
-        // 3. Store the generated PDF locally
-        // Note: Writing to disk on Cloud Run is generally not persistent across instances/invocations.
-        // This line will work for the duration of the request, but the file won't persist if the instance
-        // shuts down or a new one spins up. If long-term storage is needed, use Google Cloud Storage.
         fs.writeFileSync(pdfFilePath, pdfBuffer);
         console.log(`Generated PDF saved locally at: ${pdfFilePath}`);
 
-        // Add the generated PDF to email attachments (at the beginning)
         attachmentsForEmail.unshift({
             filename: pdfFileName,
             content: pdfBuffer,
             contentType: 'application/pdf'
         });
 
-        // 4. Define email options
+        // 4. Define email options (No change)
         const mailOptions = {
             from: `"Madrasatulbayt Applications" <${process.env.SMTP_USER}>`,
             to: `${process.env.RECIPIENT_YAHOO_EMAIL}, ${process.env.RECIPIENT_OUTLOOK_EMAIL}`,
@@ -610,54 +602,48 @@ app.post('/submit-application', applicationUpload, async (req, res) => { // Use 
             attachments: attachmentsForEmail,
         };
 
-        // 5. Send the email
+        // 5. Send the email (No change)
         const info = await transporter.sendMail(mailOptions);
         console.log('Application Email sent: %s', info.messageId);
         console.log('Application Email Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-        // 6. Send confirmation email to the applicant
-if (formData.email) {
-    const confirmationMailOptions = {
-        from: `"Madrasatulbayt Admissions" <${process.env.SMTP_USER}>`,
-        to: formData.email,
-        subject: "Your Application Has Been Received",
-        html: `
-            <p>Dear ${formData.firstName || 'Applicant'},</p>
-            <p>Thank you for submitting your application to Madrasatulbayt.</p>
-            <p>We have received your documents and will review your application shortly.</p>
-            <p>If you have any questions, feel free to reply to this email.</p>
-            <p>Best regards,<br>Admissions Team</p>
-        `
-    };
+        // 6. Send confirmation email to the applicant (No change)
+        if (formData.email) {
+            const confirmationMailOptions = {
+                from: `"Madrasatulbayt Admissions" <${process.env.SMTP_USER}>`,
+                to: formData.email,
+                subject: "Your Application Has Been Received",
+                html: `
+                    <p>Dear ${formData.firstName || 'Applicant'},</p>
+                    <p>Thank you for submitting your application to Madrasatulbayt.</p>
+                    <p>We have received your documents and will review your application shortly.</p>
+                    <p>If you have any questions, feel free to reply to this email.</p>
+                    <p>Best regards,<br>Admissions Team</p>
+                `
+            };
+            const confirmationInfo = await transporter.sendMail(confirmationMailOptions);
+            console.log('Confirmation email sent to applicant: %s', confirmationInfo.messageId);
+        }
 
-    const confirmationInfo = await transporter.sendMail(confirmationMailOptions);
-    console.log('Confirmation email sent to applicant: %s', confirmationInfo.messageId);
-}
-
-
-        // Redirect the user to a thank you page
         res.redirect('/thankyou(app).html');
 
     } catch (error) {
         console.error('Error processing application:', error);
         if (error.code === 'EAUTH') {
             console.error('Authentication failed. Check your SMTP_USER and SMTP_PASS in.env. For Gmail, ensure you are using an App Password.');
-        } else if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') { // Changed | to || for logical OR
+        } else if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
             console.error('Could not connect to SMTP server. Check SMTP_HOST and SMTP_PORT, and ensure your network allows outgoing connections.');
         }
         res.status(500).send('An error occurred during application submission. Please try again later.');
     }
 });
 
-// --- Route for Contact Form Submission ---
-// app.post('/submit-contact', contactUpload.none(), async (req, res) => {
-    app.post('/submit-contact', async (req, res) => {
+// --- Route for Contact Form Submission (No change, but simplified Puppeteer launch as above) ---
+app.post('/submit-contact', async (req, res) => {
     try {
-        const formData = req.body; // Contains text fields from the contact form
-
+        const formData = req.body;
         console.log('Received Contact Form Data:', formData);
 
-        // 1. Define email options for the contact form
         const mailOptions = {
             from: `"Madrasatulbayt Contact Form" <${process.env.SMTP_USER}>`,
             to: `${process.env.RECIPIENT_YAHOO_EMAIL}, ${process.env.RECIPIENT_OUTLOOK_EMAIL}`,
@@ -674,50 +660,52 @@ if (formData.email) {
             `,
         };
 
-        // 2. Send the email
         const info = await transporter.sendMail(mailOptions);
         console.log('Contact Email sent: %s', info.messageId);
         console.log('Contact Email Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-        // Redirect the user to a thank you page or send a success response
         res.redirect('/thankyou(con).html');
 
     } catch (error) {
         console.error('Error processing contact form:', error);
         if (error.code === 'EAUTH') {
             console.error('Authentication failed. Check your SMTP_USER and SMTP_PASS in.env. For Gmail, ensure you are using an App Password.');
-        } else if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') { // Changed | to ||
+        } else if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
             console.error('Could not connect to SMTP server. Check SMTP_HOST and SMTP_PORT, and ensure your network allows outgoing connections.');
         }
         res.status(500).send('An error occurred during contact form submission. Please try again later.');
     }
 });
 
-// Routing for downloading a blank form
+// --- Routing for downloading a blank form ---
 app.get('/download-blank-form', async (req, res) => {
     try {
-        // --- CHANGE START ---
-        // Original: const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-        // Use chrome-aws-lambda for executable path and arguments
+        // --- CHANGE START (Puppeteer Launch Options) ---
+        // Original: const browser = await puppeteer.launch();
+        // Original (after chrome-aws-lambda): const browser = await puppeteer.launch({ args: chromium.args, ... });
+        // Use simpler args because Chromium is installed globally by Dockerfile's apt-get.
         const browser = await puppeteer.launch({
-            args: chromium.args, //
-            defaultViewport: chromium.defaultViewport, //
-            executablePath: await chromium.executablePath, //
-            headless: chromium.headless, //
-            ignoreHTTPSErrors: true, //
+            headless: true, // Set to true for server environments
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--single-process'
+            ],
+            // executablePath: '/usr/bin/chromium' // Optional
         });
         // --- CHANGE END ---
 
         const page = await browser.newPage();
 
-        // Path to your blank HTML form file (make sure you have this file in your project)
         const blankFormPath = path.join(__dirname, 'public', 'blank_form.html');
 
-        // Note: 'file://' protocol has limitations in serverless environments.
-        // It's generally better to serve the HTML content directly using `page.setContent`
-        // if `blank_form.html` is a static file that doesn't need a full server.
-        // Example: await page.setContent(fs.readFileSync(blankFormPath, 'utf8'), { waitUntil: 'networkidle0' });
-        await page.goto('file://' + blankFormPath, { waitUntil: 'networkidle0' });
+        // It's generally more reliable to read the file content and use page.setContent
+        // rather than 'file://' URLs in containerized environments.
+        await page.setContent(fs.readFileSync(blankFormPath, 'utf8'), { waitUntil: 'networkidle0' });
+        // Original: await page.goto('file://' + blankFormPath, { waitUntil: 'networkidle0' });
+
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
@@ -732,7 +720,6 @@ app.get('/download-blank-form', async (req, res) => {
 
         await browser.close();
 
-        // Set headers to prompt download
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'attachment; filename="Madrasatulbayt_Blank_Application_Form.pdf"',
@@ -747,11 +734,10 @@ app.get('/download-blank-form', async (req, res) => {
 });
 
 
-// --- Serve Static Files ---
-// Create a 'public' folder in your project root for your HTML files (forms, thank you page)
+// --- Serve Static Files (No change) ---
 app.use(express.static('public'));
 
-// --- Start the Server ---
+// --- Start the Server (No change) ---
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
     console.log(`Application form endpoint: http://localhost:${port}/submit-application`);
