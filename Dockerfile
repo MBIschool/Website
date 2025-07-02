@@ -1,59 +1,41 @@
-# Use official Node.js 20 LTS slim base image
+# Use a slim Node.js image as the base
 FROM node:20-slim
 
-# Install Chromium and all required dependencies
-RUN apt-get update && apt-get install -y \
-    chromium \
-    fonts-liberation \
-    libappindicator3-1 \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libc6 \
-    libcairo2 \
-    libcups2 \
-    libdbus-1-3 \
-    libdrm2 \
-    libexpat1 \
-    libgbm1 \
-    libgcc1 \
-    libglib2.0-0 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libpangocairo-1.0-0 \
-    libx11-6 \
-    libx11-xcb1 \
-    libxcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxext6 \
-    libxfixes3 \
-    libxrandr2 \
-    xdg-utils \
-    --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package manifests first for better caching
+# Install Google Chrome Stable and other dependencies required by Puppeteer
+# Note: This is a more robust way to ensure a compatible Chromium version.
+RUN apt-get update && apt-get install -y gnupg wget \
+    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update && apt-get install -y \
+        google-chrome-stable \
+        fontconfig \
+        fonts-ipafont-gothic \
+        fonts-wqy-zenhei \
+        fonts-thai-tlwg \
+        fonts-kacst \
+        --no-install-recommends \
+        && rm -rf /var/lib/apt/lists/* \
+        && rm -rf /etc/apt/keyrings/google-chrome.gpg # Clean up the key after use
+
+# Skip Puppeteer's automatic Chromium download
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+# Point Puppeteer to the Google Chrome executable
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+
+# Copy package.json and package-lock.json (or yarn.lock) to the working directory
 COPY package*.json ./
 
-# Skip Chromium download by Puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+# Install Node.js dependencies
+RUN npm ci
 
-# Install dependencies
-RUN npm ci 
-
-# Copy app source
+# Copy the rest of your application code
 COPY . .
 
-# Create directories your app needs
-RUN mkdir -p /usr/src/app/applications_pdfs /usr/src/app/uploaded_documents
-
-# Expose port
+# Expose the port your app runs on (default for Cloud Run is 8080)
 EXPOSE 8080
 
-# Start the app
-CMD ["npm", "start"]
+# Start your Node.js application
+CMD [ "node", "server.js" ]
