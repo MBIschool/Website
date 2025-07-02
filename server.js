@@ -5,11 +5,11 @@ const multer = require('multer');
 const nodemailer = require('nodemailer');
 
 // --- CHANGE START (Import Puppeteer) ---
-// Original: const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer');
 // Original (after previous change): const puppeteer = require('puppeteer-core');
 // Original (after previous change): const chromium = require('chrome-aws-lambda');
 // Now, only puppeteer-core is needed, as Chromium is installed at the OS level by Dockerfile.
-const puppeteer = require('puppeteer-core');
+// const puppeteer = require('puppeteer-core');
 // --- CHANGE END ---
 
 const fs = require('fs');

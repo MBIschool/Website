@@ -1,11 +1,12 @@
-# Use a slim Node.js image as the base
+## Use a slim Node.js image as the base for smaller size
 FROM node:20-slim
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Install system dependencies required by Puppeteer's downloaded Chromium.
-# This ensures that Puppeteer's own browser can run correctly in a minimal environment.
+# Install a comprehensive list of system dependencies required by Puppeteer's downloaded Chromium.
+# This list aims to cover most common requirements across various Linux environments for headless Chrome.
+# We remove 'libxshmfence6' as it was causing 'Unable to locate package' error on 'bookworm'.
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     fonts-liberation \
@@ -25,6 +26,8 @@ RUN apt-get update && apt-get install -y \
     libnspr4 \
     libnss3 \
     libu2f-udev \
+    libvulkan1 \ 
+    # Added for broader compatibility, often implicitly needed
     libxcomposite1 \
     libxdamage1 \
     libxfixes3 \
@@ -33,22 +36,26 @@ RUN apt-get update && apt-get install -y \
     libxrender1 \
     libxkbcommon0 \
     xdg-utils \
-    # Basic fonts often needed for rendering
+    # Basic fonts often needed for rendering PDFs correctly
     fontconfig \
     fonts-ipafont-gothic \
     fonts-wqy-zenhei \
     fonts-thai-tlwg \
     fonts-kacst \
+    # Clean up apt caches to reduce image size
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-# NO PUPPETEER_SKIP_CHROMIUM_DOWNLOAD ENV VAR HERE
-# NO PUPPETEER_EXECUTABLE_PATH ENV VAR HERE
+# IMPORTANT: Do NOT set PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+# Do NOT set PUPPETEER_EXECUTABLE_PATH here.
+# Let Puppeteer download and manage its compatible Chromium.
 
-# Copy package.json and package-lock.json (or yarn.lock) to the working directory
+# Copy package.json and package-lock.json to the working directory
+# This is done before npm ci to leverage Docker's build cache
 COPY package*.json ./
 
 # Install Node.js dependencies. Puppeteer will download Chromium during this step.
+# This is where the large Chromium binary will be fetched into node_modules.
 RUN npm ci
 
 # Copy the rest of your application code

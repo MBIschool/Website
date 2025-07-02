@@ -11,6 +11,6 @@
     "express": "^5.1.0",
     "multer": "^2.0.1",
     "nodemailer": "^7.0.3",
-    "puppeteer-core": "^24.11.2"
+    "puppeteer": "^24.11.2"
   }
 }
