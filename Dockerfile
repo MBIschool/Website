@@ -34,6 +34,8 @@ RUN apt-get update && apt-get install -y \
     rm -rf /var/lib/apt/lists/*
 
 # WORKDIR, copy package.json
+ENV PUPPETEER_DOWNLOAD_PATH=/usr/src/app/.local-chromium
+
 WORKDIR /usr/src/app
 COPY package*.json ./
 
