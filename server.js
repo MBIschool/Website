@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const port = 3000; 
+const port = const port = process.env.PORT || 8080;
 
 
 app.use(express.urlencoded({ extended: true }));
