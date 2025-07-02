@@ -12,6 +12,6 @@
     "html-pdf": "^3.0.1",
     "multer": "^2.0.1",
     "nodemailer": "^7.0.3",
-    "puppeteer": "^22.15.0"
+    "puppeteer": "^24.11.2"
   }
 }
