@@ -83,7 +83,7 @@ RUN npm ci --omit=dev
 COPY . .
 
 # 7. Expose the port your application listens on. Cloud Run expects port 8080 by default.
-EXPOSE 8080
+EXPOSE 3000
 
 # 8. Define the command to run your application when the container starts.
 # Ensure your server.js's puppeteer.launch() call includes args: ['--no-sandbox', '--disable-setuid-sandbox']
