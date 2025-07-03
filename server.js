@@ -423,7 +423,7 @@ if (!fs.existsSync(UPLOADED_DOCS_DIR)) {
     { name: 'schoolReport', maxCount: 1 },
     { name: 'academicCertificates[]', maxCount: 10 }
 ]);
-
+//  ggi
 const contactUpload = multer();
 // --- Nodemailer Transporter Setup ---
 const transporter = nodemailer.createTransport({
