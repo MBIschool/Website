@@ -578,6 +578,7 @@ app.post('/submit-application', applicationUpload, async (req, res) => {
 
         const browser = await puppeteer.launch({
     headless: 'new', // Set to 'new' for modern headless mode if using Puppeteer v22+
+     executablePath: '/usr/bin/chromium',
     args: [
         '--no-sandbox',             // Essential for running in a Docker container as a non-root user
         '--disable-setuid-sandbox', // Companion argument to --no-sandbox
@@ -586,6 +587,7 @@ app.post('/submit-application', applicationUpload, async (req, res) => {
     ]
     // No 'executablePath' needed here because we are setting PUPPETEER_EXECUTABLE_PATH
     // in the Dockerfile environment variables, which Puppeteer will honor.
+   
 });
 
         const page = await browser.newPage();
@@ -716,6 +718,7 @@ app.get('/download-blank-form', async (req, res) => {
 // })
 const browser = await puppeteer.launch({
     headless: 'new', // Set to 'new' for modern headless mode if using Puppeteer v22+
+     executablePath: '/usr/bin/chromium',
     args: [
         '--no-sandbox',             // Essential for running in a Docker container as a non-root user
         '--disable-setuid-sandbox', // Companion argument to --no-sandbox
