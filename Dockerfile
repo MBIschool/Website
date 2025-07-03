@@ -44,9 +44,11 @@ RUN apt-get update && apt-get install -y \
     libxcb1 \
     libxcomposite1 \
     libxcursor1 \
+    libxcursor1 \
     libxdamage1 \
     libxext6 \
     libxfixes3 \
+    libxi6 \
     libxi6 \
     libxrandr2 \
     libxrender1 \
@@ -55,7 +57,14 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     fonts-liberation \
     lsb-release \
+    libxrender1 \
+    libxss1 \
+    libxtst6 \
+    ca-certificates \
+    fonts-liberation \
+    lsb-release \
     xdg-utils \
+    wget \
     wget \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
@@ -64,6 +73,7 @@ RUN apt-get update && apt-get install -y \
 # We set LANG and LC_ALL in ENV above for clarity and consistency.
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
+# 3. Set the working directory for your application inside the container.
 # 3. Set the working directory for your application inside the container.
 WORKDIR /usr/src/app
 
@@ -82,6 +92,7 @@ RUN npm ci --omit=dev
 # 6. Copy the rest of your application code into the working directory.
 COPY . .
 
+# 7. Expose the port your application listens on. Cloud Run expects port 8080 by default.
 # 7. Expose the port your application listens on. Cloud Run expects port 8080 by default.
 EXPOSE 8080
 

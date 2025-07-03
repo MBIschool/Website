@@ -569,11 +569,24 @@ app.post('/submit-application', applicationUpload, async (req, res) => {
   
         const htmlContent = generateApplicationPdfHtml(formData, fileNamesForPdf);
 
+        // const browser = await puppeteer.launch({
+        //     headless: true,
+        //     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        //    ignoreDefaultArgs: ['--disable-extensions'],
+        //    enableExtensions: true,
+        //     });
+
         const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-           ignoreDefaultArgs: ['--disable-extensions']
-            });
+    headless: 'new', // Set to 'new' for modern headless mode if using Puppeteer v22+
+    args: [
+        '--no-sandbox',             // Essential for running in a Docker container as a non-root user
+        '--disable-setuid-sandbox', // Companion argument to --no-sandbox
+        '--disable-gpu',            // Often recommended for stability in headless environments
+        '--disable-dev-shm-usage'   // Important for environments with limited /dev/shm (like containers)
+    ]
+    // No 'executablePath' needed here because we are setting PUPPETEER_EXECUTABLE_PATH
+    // in the Dockerfile environment variables, which Puppeteer will honor.
+});
 
         const page = await browser.newPage();
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
@@ -695,10 +708,22 @@ if (formData.email) {
 app.get('/download-blank-form', async (req, res) => {
   try {
     
-    const browser = await puppeteer.launch({
-  headless: true,
-  args: ['--no-sandbox', '--disable-setuid-sandbox'],
-ignoreDefaultArgs: ['--disable-extensions']
+//     const browser = await puppeteer.launch({
+//   headless: true,
+//   args: ['--no-sandbox', '--disable-setuid-sandbox'],
+// ignoreDefaultArgs: ['--disable-extensions'],
+// enableExtensions: true,
+// })
+const browser = await puppeteer.launch({
+    headless: 'new', // Set to 'new' for modern headless mode if using Puppeteer v22+
+    args: [
+        '--no-sandbox',             // Essential for running in a Docker container as a non-root user
+        '--disable-setuid-sandbox', // Companion argument to --no-sandbox
+        '--disable-gpu',            // Often recommended for stability in headless environments
+        '--disable-dev-shm-usage'   // Important for environments with limited /dev/shm (like containers)
+    ]
+    // No 'executablePath' needed here because we are setting PUPPETEER_EXECUTABLE_PATH
+    // in the Dockerfile environment variables, which Puppeteer will honor.
 });
 
     const page = await browser.newPage();
